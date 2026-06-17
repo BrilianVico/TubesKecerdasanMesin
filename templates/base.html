@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Agentic AI System{% endblock %}</title>
+    <!-- Tailwind CSS CDN for rapid prototyping and responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased font-sans flex h-screen overflow-hidden">
+    <!-- Fixed Sidebar (Continuously open on tablet/desktop) -->
+    <aside class="w-64 bg-slate-900 text-white flex-col hidden md:flex h-full flex-shrink-0 shadow-xl z-20">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold tracking-tight text-blue-400">Agentic AI</h1>
+            <p class="text-slate-400 text-sm mt-1">Product Recommendations</p>
+        </div>
+        <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Dashboard</a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Produk</a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Review</a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Monitoring Akurasi ML</a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola User</a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Dashboard</a>
+                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg bg-blue-600 text-white font-medium shadow-md transition transform hover:scale-105">Pencarian Produk (AI Insights)</a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Riwayat Analisis</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="block px-4 py-3 rounded-lg bg-blue-600 text-white font-medium shadow-md transition transform hover:scale-105">Login</a>
+                <a href="{% url 'accounts:register' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Register</a>
+            {% endif %}
+        </nav>
+        <div class="p-4 border-t border-slate-800">
+            {% if request.user.is_authenticated %}
+            <div class="flex items-center space-x-3 bg-slate-800 p-3 rounded-xl mb-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold shadow-inner">
+                    {{ request.user.username|make_list|first|upper }}
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-sm font-semibold truncate">{{ request.user.username }}</p>
+                    <p class="text-xs text-slate-400 truncate">{% if request.user.is_superuser %}Admin{% else %}User{% endif %}</p>
+                </div>
+            </div>
+            <a href="{% url 'accounts:logout' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-rose-600 text-white text-sm font-medium hover:bg-rose-700 transition">Logout</a>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- Mobile Header (Visible only on small screens) -->
+        <header class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center shadow-md z-10">
+            <h1 class="font-bold text-lg text-blue-400">Agentic AI</h1>
+            <button class="p-2 focus:outline-none hover:bg-slate-800 rounded">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </header>
+        
+        <!-- Main Scrollable Content -->
+        <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-slate-50">
+            {% block content %}
+            <!-- Default Placeholder Content -->
+            <div class="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+                <header>
+                    <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">System Overview</h2>
+                    <p class="text-slate-500 mt-2">Monitor the core components of the Agentic Recommendation Pipeline.</p>
+                </header>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Products Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Products & Data</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Database models and ETL pipelines for ingesting product catalogs and user reviews.</p>
+                    </div>
+
+                    <!-- ML Engine Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">ML Engine</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Sentiment analysis powered by LSTM and Random Forest inference models.</p>
+                    </div>
+
+                    <!-- Agentic Brain Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Agentic Brain</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">LangGraph orchestration handling dynamic decision making and tool execution.</p>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register("{% static 'sw.js' %}")
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

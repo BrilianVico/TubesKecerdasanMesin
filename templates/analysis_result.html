@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis: {{ product.mock_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <a href="{% url 'home' %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center mb-2 transition">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Dashboard
+            </a>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ product.mock_name }}</h2>
+            <p class="text-slate-500 mt-1">{{ product.department_name }} / {{ product.class_name }} / ${{ product.mock_price }}</p>
+        </div>
+        <div class="hidden sm:block">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
+                Analysis Complete
+            </span>
+        </div>
+    </div>
+
+    <!-- Agentic Brain Recommendation -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+        <div class="relative z-10">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold">Agentic Brain Recommendation</h3>
+            </div>
+            <p class="text-lg leading-relaxed text-blue-50 font-medium">{{ recommendation }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Extracted Insights -->
+        <div class="lg:col-span-1 space-y-6">
+            <!-- Pros -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-emerald-600 flex items-center mb-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
+                    Key Strengths
+                </h4>
+                <ul class="space-y-3">
+                    {% for pro in insights.pros %}
+                    <li class="flex items-start">
+                        <span class="text-emerald-500 mr-2">•</span>
+                        <span class="text-slate-700 text-sm">{{ pro }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="text-slate-500 text-sm italic">No significant pros extracted.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Cons -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-rose-600 flex items-center mb-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+                    Areas for Improvement
+                </h4>
+                <ul class="space-y-3">
+                    {% for con in insights.cons %}
+                    <li class="flex items-start">
+                        <span class="text-rose-500 mr-2">•</span>
+                        <span class="text-slate-700 text-sm">{{ con }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="text-slate-500 text-sm italic">No significant cons extracted.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- ML Sentiments Detail -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
+                <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Raw Reviews & ML Sentiments
+                </h4>
+                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                    {% for item in ml_sentiments %}
+                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if item.sentiment == 'Positive' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                                {{ item.sentiment }}
+                            </span>
+                            <span class="text-xs text-slate-500 font-mono">Conf: {{ item.confidence|floatformat:2 }}</span>
+                        </div>
+                        <p class="text-sm text-slate-700 italic">"{{ item.text }}"</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-slate-500 text-center py-8">No raw reviews analyzed.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Custom Scrollbar for the reviews area */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+</style>
+{% endblock %}
