@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Products | Agentic AI{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Kelola Dataset Produk</h2>
+            <p class="text-slate-500 mt-2">Manage the underlying product catalog.</p>
+        </div>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow font-medium transition">
+            + Add Product
+        </button>
+    </header>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
+                        <th class="p-4 font-semibold">ID</th>
+                        <th class="p-4 font-semibold">Mock Name</th>
+                        <th class="p-4 font-semibold">Department</th>
+                        <th class="p-4 font-semibold">Price</th>
+                        <th class="p-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for p in products %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 text-slate-800">{{ p.clothing_id }}</td>
+                        <td class="p-4 text-slate-800 font-medium">{{ p.mock_name }}</td>
+                        <td class="p-4 text-slate-500">{{ p.department_name }}</td>
+                        <td class="p-4 text-slate-800">${{ p.mock_price }}</td>
+                        <td class="p-4 text-right space-x-2 flex justify-end">
+                            <form method="POST" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-blue-600 hover:text-blue-800 text-sm font-medium mr-2">Edit</button>
+                            </form>
+                            <form method="POST" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-rose-600 hover:text-rose-800 text-sm font-medium">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="p-4 border-t border-slate-100 text-center text-sm text-slate-500">
+            [Pagination Controls Placeholder]
+        </div>
+    </div>
+</div>
+{% endblock %}

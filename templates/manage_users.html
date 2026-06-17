@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users | Agentic AI{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Kelola User</h2>
+            <p class="text-slate-500 mt-2">Manage system administrators and standard users.</p>
+        </div>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow font-medium transition">
+            + Add User
+        </button>
+    </header>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
+                        <th class="p-4 font-semibold">Username</th>
+                        <th class="p-4 font-semibold">Email</th>
+                        <th class="p-4 font-semibold">Role</th>
+                        <th class="p-4 font-semibold">Status</th>
+                        <th class="p-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <!-- Placeholder Rows -->
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 text-slate-800 font-medium">admin_system</td>
+                        <td class="p-4 text-slate-500">admin@agentic.ai</td>
+                        <td class="p-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Admin</span>
+                        </td>
+                        <td class="p-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Active</span>
+                        </td>
+                        <td class="p-4 text-right space-x-2">
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
+                            <button class="text-slate-400 cursor-not-allowed text-sm font-medium" disabled>Delete</button>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 text-slate-800 font-medium">johndoe</td>
+                        <td class="p-4 text-slate-500">john@example.com</td>
+                        <td class="p-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">User</span>
+                        </td>
+                        <td class="p-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Active</span>
+                        </td>
+                        <td class="p-4 text-right space-x-2">
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
+                            <button class="text-rose-600 hover:text-rose-800 text-sm font-medium">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

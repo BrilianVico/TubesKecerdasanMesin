@@ -20,15 +20,16 @@
         <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
             {% if request.user.is_authenticated %}
                 {% if request.user.is_superuser %}
-                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Dashboard</a>
-                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Produk</a>
-                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Review</a>
-                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Monitoring Akurasi ML</a>
-                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola User</a>
+                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">AI Insight</a>
+                    <a href="{% url 'agentic_brain:admin_dashboard' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Admin Dashboard</a>
+                    <a href="{% url 'agentic_brain:manage_products' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Produk</a>
+                    <a href="{% url 'agentic_brain:manage_reviews' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola Dataset Review</a>
+                    <!-- <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Monitoring Akurasi ML</a> -->
+                    <!-- <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Kelola User</a> -->
                 {% else %}
-                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Dashboard</a>
-                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg bg-blue-600 text-white font-medium shadow-md transition transform hover:scale-105">Pencarian Produk (AI Insights)</a>
-                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Riwayat Analisis</a>
+                    <!-- <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">AI Insight</a> -->
+                    <a href="{% url 'home' %}" class="block px-4 py-3 rounded-lg bg-blue-600 text-white font-medium shadow-md transition transform hover:scale-105">AI Insights</a>
+                    <!-- <a href="#" class="block px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">Riwayat Analisis</a> -->
                 {% endif %}
             {% else %}
                 <a href="{% url 'accounts:login' %}" class="block px-4 py-3 rounded-lg bg-blue-600 text-white font-medium shadow-md transition transform hover:scale-105">Login</a>

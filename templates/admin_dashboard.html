@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | Agentic AI{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+    <header class="mb-8 flex justify-between items-center">
+        <div>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Admin Dashboard</h2>
+            <p class="text-slate-500 mt-2">System overview and ML engine performance metrics.</p>
+        </div>
+        <a href="{% url 'agentic_brain:export_analysis_report' %}" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg shadow-md font-semibold transition inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Export Analysis Report (CSV)
+        </a>
+    </header>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Total Users</h3>
+            <p class="text-3xl font-bold text-slate-800">1,248</p>
+            <p class="text-xs text-emerald-500 mt-2">↑ 12% from last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Total Products</h3>
+            <p class="text-3xl font-bold text-slate-800">{{ total_products }}</p>
+            <p class="text-xs text-emerald-500 mt-2">Database records</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Analyzed Reviews</h3>
+            <p class="text-3xl font-bold text-slate-800">{{ total_reviews }}</p>
+            <p class="text-xs text-blue-500 mt-2">{{ total_analyses }} Full LangGraph Runs</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">ML Accuracy (RF)</h3>
+            <p class="text-3xl font-bold text-slate-800">{{ accuracy }}</p>
+            <p class="text-xs text-slate-400 mt-2">F1-Score: {{ f1_score }}</p>
+        </div>
+    </div>
+
+    <!-- ML Monitoring Chart Placeholder -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 w-full lg:w-1/2">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">ML Sentiment Distribution (Platform-Wide)</h3>
+        <div class="relative h-64 w-full">
+            <canvas id="adminSentimentChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('adminSentimentChart').getContext('2d');
+    
+    // Safely parse counts from Django context
+    const totalPositive = {{ total_positive|default:0 }};
+    const totalNegative = {{ total_negative|default:0 }};
+    
+    // Check if there is data to display
+    if (totalPositive === 0 && totalNegative === 0) {
+        document.getElementById('adminSentimentChart').style.display = 'none';
+        const container = document.getElementById('adminSentimentChart').parentElement;
+        container.innerHTML = '<div class="h-full flex items-center justify-center text-slate-400 italic">No analysis data available yet.</div>';
+        return;
+    }   
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Positive Sentiments', 'Negative Sentiments'],
+            datasets: [{
+                data: [totalPositive, totalNegative],
+                backgroundColor: ['#10b981', '#f43f5e'], // Tailwind emerald-500, rose-500
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -14,88 +14,124 @@
             <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ product.mock_name }}</h2>
             <p class="text-slate-500 mt-1">{{ product.department_name }} / {{ product.class_name }} / ${{ product.mock_price }}</p>
         </div>
-        <div class="hidden sm:block">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                Analysis Complete
+        <div class="hidden sm:block" id="status-badge-container">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800" id="status-badge">
+                Ready for Analysis
             </span>
         </div>
     </div>
 
-    <!-- Agentic Brain Recommendation -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
-        <div class="relative z-10">
-            <div class="flex items-center space-x-3 mb-4">
-                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h3 class="text-2xl font-bold">Agentic Brain Recommendation</h3>
-            </div>
-            <p class="text-lg leading-relaxed text-blue-50 font-medium">{{ recommendation }}</p>
-        </div>
+    <!-- Analyze Button -->
+    <div class="text-center" id="action-container">
+        <button id="analyze-btn" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <span id="btn-text">Unleash Agentic Brain</span>
+        </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Extracted Insights -->
-        <div class="lg:col-span-1 space-y-6">
-            <!-- Pros -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <h4 class="text-lg font-bold text-emerald-600 flex items-center mb-4">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
-                    Key Strengths
-                </h4>
-                <ul class="space-y-3">
-                    {% for pro in insights.pros %}
-                    <li class="flex items-start">
-                        <span class="text-emerald-500 mr-2">•</span>
-                        <span class="text-slate-700 text-sm">{{ pro }}</span>
-                    </li>
-                    {% empty %}
-                    <li class="text-slate-500 text-sm italic">No significant pros extracted.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            
-            <!-- Cons -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <h4 class="text-lg font-bold text-rose-600 flex items-center mb-4">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
-                    Areas for Improvement
-                </h4>
-                <ul class="space-y-3">
-                    {% for con in insights.cons %}
-                    <li class="flex items-start">
-                        <span class="text-rose-500 mr-2">•</span>
-                        <span class="text-slate-700 text-sm">{{ con }}</span>
-                    </li>
-                    {% empty %}
-                    <li class="text-slate-500 text-sm italic">No significant cons extracted.</li>
-                    {% endfor %}
-                </ul>
+    <!-- Results Container (Hidden by default) -->
+    <div id="results-container" class="hidden space-y-8">
+        <!-- Agentic Brain Recommendation -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+            <div class="relative z-10">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">Agentic Brain Recommendation</h3>
+                </div>
+                <!-- Skeleton Loader for Recommendation -->
+                <div id="rec-skeleton" class="animate-pulse space-y-3">
+                    <div class="h-4 bg-white/20 rounded w-3/4"></div>
+                    <div class="h-4 bg-white/20 rounded w-5/6"></div>
+                    <div class="h-4 bg-white/20 rounded w-2/3"></div>
+                </div>
+                <!-- Actual Content -->
+                <p id="rec-content" class="text-lg leading-relaxed text-blue-50 font-medium hidden"></p>
             </div>
         </div>
 
-        <!-- ML Sentiments Detail -->
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
-                <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    Raw Reviews & ML Sentiments
-                </h4>
-                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                    {% for item in ml_sentiments %}
-                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 transition">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if item.sentiment == 'Positive' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
-                                {{ item.sentiment }}
-                            </span>
-                            <span class="text-xs text-slate-500 font-mono">Conf: {{ item.confidence|floatformat:2 }}</span>
-                        </div>
-                        <p class="text-sm text-slate-700 italic">"{{ item.text }}"</p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Extracted Insights -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Pros -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <h4 class="text-lg font-bold text-emerald-600 flex items-center mb-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
+                        Key Strengths
+                    </h4>
+                    <!-- Skeleton Loader for Pros -->
+                    <div id="pros-skeleton" class="animate-pulse space-y-3">
+                        <div class="h-3 bg-slate-200 rounded w-full"></div>
+                        <div class="h-3 bg-slate-200 rounded w-4/5"></div>
+                        <div class="h-3 bg-slate-200 rounded w-5/6"></div>
                     </div>
-                    {% empty %}
-                    <p class="text-slate-500 text-center py-8">No raw reviews analyzed.</p>
-                    {% endfor %}
+                    <!-- Actual Content -->
+                    <ul id="pros-content" class="space-y-3 hidden"></ul>
+                </div>
+                
+                <!-- Cons -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <h4 class="text-lg font-bold text-rose-600 flex items-center mb-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+                        Areas for Improvement
+                    </h4>
+                    <!-- Skeleton Loader for Cons -->
+                    <div id="cons-skeleton" class="animate-pulse space-y-3">
+                        <div class="h-3 bg-slate-200 rounded w-full"></div>
+                        <div class="h-3 bg-slate-200 rounded w-3/4"></div>
+                    </div>
+                    <!-- Actual Content -->
+                    <ul id="cons-content" class="space-y-3 hidden"></ul>
+                </div>
+            </div>
+
+            <!-- ML Sentiments Detail -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
+                    <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Raw Reviews & ML Sentiments
+                    </h4>
+                    <!-- Skeleton Loader for Sentiments -->
+                    <div id="sentiments-skeleton" class="animate-pulse space-y-4">
+                        <div class="p-4 rounded-xl border border-slate-100 bg-slate-50">
+                            <div class="h-3 bg-slate-200 rounded w-1/4 mb-3"></div>
+                            <div class="h-3 bg-slate-200 rounded w-full mb-1"></div>
+                            <div class="h-3 bg-slate-200 rounded w-4/5"></div>
+                        </div>
+                        <div class="p-4 rounded-xl border border-slate-100 bg-slate-50">
+                            <div class="h-3 bg-slate-200 rounded w-1/4 mb-3"></div>
+                            <div class="h-3 bg-slate-200 rounded w-full mb-1"></div>
+                            <div class="h-3 bg-slate-200 rounded w-5/6"></div>
+                        </div>
+                    </div>
+                    <!-- Actual Content -->
+                    <div id="sentiments-content" class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart.js Visualization Containers -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8 hidden" id="charts-container">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-slate-800 mb-4 text-center flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    Sentiment Distribution
+                </h4>
+                <div class="relative h-64 w-full">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-slate-800 mb-4 text-center flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Market Comparison (Rating)
+                </h4>
+                <div class="relative h-64 w-full">
+                    <canvas id="comparisonChart"></canvas>
                 </div>
             </div>
         </div>
@@ -109,4 +145,239 @@
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let sentimentChartInstance = null;
+let comparisonChartInstance = null;
+
+function renderCharts(payload) {
+    const chartsContainer = document.getElementById('charts-container');
+    chartsContainer.classList.remove('hidden');
+
+    // Sentiment Chart Logic
+    const sentiments = payload.ml_sentiments || [];
+    let posCount = 0;
+    let negCount = 0;
+    sentiments.forEach(item => {
+        if (item.sentiment === 'Positive') posCount++;
+        else negCount++;
+    });
+
+    const ctxSentiment = document.getElementById('sentimentChart').getContext('2d');
+    if (sentimentChartInstance) {
+        sentimentChartInstance.destroy();
+    }
+    sentimentChartInstance = new Chart(ctxSentiment, {
+        type: 'doughnut',
+        data: {
+            labels: ['Positive', 'Negative'],
+            datasets: [{
+                data: [posCount, negCount],
+                backgroundColor: ['#10b981', '#f43f5e'], // Tailwind emerald-500, rose-500
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Comparison Chart Logic
+    const mainData = payload.main_product_data || {name: 'Main Product', rating: 0};
+    const compData = payload.competitor_data || {name: 'No Competitor', rating: 0};
+    
+    // Fallback if name is missing
+    const mainName = mainData.name ? mainData.name.substring(0, 15) + '...' : 'Product';
+    const compName = compData.name ? compData.name.substring(0, 15) + '...' : 'Competitor';
+
+    const ctxComparison = document.getElementById('comparisonChart').getContext('2d');
+    if (comparisonChartInstance) {
+        comparisonChartInstance.destroy();
+    }
+    comparisonChartInstance = new Chart(ctxComparison, {
+        type: 'bar',
+        data: {
+            labels: [mainName, compName],
+            datasets: [{
+                label: 'Average Rating (out of 5)',
+                data: [mainData.rating, compData.rating],
+                backgroundColor: ['#3b82f6', '#94a3b8'], // Tailwind blue-500, slate-400
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 5 }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const btnText = document.getElementById('btn-text');
+    const resultsContainer = document.getElementById('results-container');
+    const actionContainer = document.getElementById('action-container');
+    const statusBadge = document.getElementById('status-badge');
+    
+    // Skeletons
+    const recSkeleton = document.getElementById('rec-skeleton');
+    const prosSkeleton = document.getElementById('pros-skeleton');
+    const consSkeleton = document.getElementById('cons-skeleton');
+    const sentimentsSkeleton = document.getElementById('sentiments-skeleton');
+    
+    // Contents
+    const recContent = document.getElementById('rec-content');
+    const prosContent = document.getElementById('pros-content');
+    const consContent = document.getElementById('cons-content');
+    const sentimentsContent = document.getElementById('sentiments-content');
+
+    analyzeBtn.addEventListener('click', function() {
+        // 1. Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        btnText.innerText = "Agentic Brain is thinking...";
+        
+        // Change badge
+        statusBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 animate-pulse";
+        statusBadge.innerText = "Analyzing...";
+        
+        // Show results container with skeletons active
+        // actionContainer.classList.add('hidden');
+        resultsContainer.classList.remove('hidden');
+
+        // 2. Fetch API using Streaming Reader
+        fetch("{% url 'agentic_brain:analyze_product' product.clothing_id %}?ajax=true", {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(async response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let buffer = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, { stream: true });
+                const parts = buffer.split('\n\n');
+                buffer = parts.pop(); // Keep incomplete chunk in buffer
+                
+                for (const part of parts) {
+                    if (part.startsWith('data: ')) {
+                        const rawData = part.substring(6);
+                        const data = JSON.parse(rawData);
+                        
+                        if (data.type === 'status') {
+                            // Update loading text based on LangGraph node
+                            if (data.node === 'collect_reviews') {
+                                btnText.innerText = "🔄 [1/5] Review Collector Agent: Fetching and cleaning marketplace reviews...";
+                            } else if (data.node === 'analyze_sentiment') {
+                                btnText.innerText = "🧠 [2/5] Sentiment Analysis Agent: Running local Random Forest classification...";
+                            } else if (data.node === 'compare_products') {
+                                btnText.innerText = "⚖️ [3/5] Product Comparison Agent: Analyzing competitor market data...";
+                            } else if (data.node === 'generate_insights') {
+                                btnText.innerText = "⚡ [4/5] Insight Agent: Consulted Gemini 1.5 Flash to extract Pros and Cons...";
+                            } else if (data.node === 'make_decision') {
+                                btnText.innerText = "🎯 [5/5] Decision Agent: Formulating final product recommendation narrative...";
+                            }
+                        } else if (data.type === 'complete') {
+                            // 3. Populate DOM with Final Payload
+                            const payload = data.payload;
+                            
+                            // Recommendation
+                            recSkeleton.classList.add('hidden');
+                            recContent.innerText = payload.recommendation;
+                            recContent.classList.remove('hidden');
+
+                            // Pros
+                            prosSkeleton.classList.add('hidden');
+                            if (payload.insights.pros && payload.insights.pros.length > 0) {
+                                payload.insights.pros.forEach(pro => {
+                                    const li = document.createElement('li');
+                                    li.className = "flex items-start";
+                                    li.innerHTML = `<span class="text-emerald-500 mr-2">•</span><span class="text-slate-700 text-sm">${pro}</span>`;
+                                    prosContent.appendChild(li);
+                                });
+                            } else {
+                                prosContent.innerHTML = '<li class="text-slate-500 text-sm italic">No significant pros extracted.</li>';
+                            }
+                            prosContent.classList.remove('hidden');
+
+                            // Cons
+                            consSkeleton.classList.add('hidden');
+                            if (payload.insights.cons && payload.insights.cons.length > 0) {
+                                payload.insights.cons.forEach(con => {
+                                    const li = document.createElement('li');
+                                    li.className = "flex items-start";
+                                    li.innerHTML = `<span class="text-rose-500 mr-2">•</span><span class="text-slate-700 text-sm">${con}</span>`;
+                                    consContent.appendChild(li);
+                                });
+                            } else {
+                                consContent.innerHTML = '<li class="text-slate-500 text-sm italic">No significant cons extracted.</li>';
+                            }
+                            consContent.classList.remove('hidden');
+
+                            // Sentiments
+                            sentimentsSkeleton.classList.add('hidden');
+                            if (payload.ml_sentiments && payload.ml_sentiments.length > 0) {
+                                payload.ml_sentiments.forEach(item => {
+                                    const div = document.createElement('div');
+                                    div.className = "p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 transition";
+                                    
+                                    const badgeClass = item.sentiment === 'Positive' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
+                                    const conf = parseFloat(item.confidence).toFixed(2);
+                                    
+                                    div.innerHTML = `
+                                        <div class="flex justify-between items-start mb-2">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeClass}">
+                                                ${item.sentiment}
+                                            </span>
+                                            <span class="text-xs text-slate-500 font-mono">Conf: ${conf}</span>
+                                        </div>
+                                        <p class="text-sm text-slate-700 italic">"${item.text}"</p>
+                                    `;
+                                    sentimentsContent.appendChild(div);
+                                });
+                            } else {
+                                sentimentsContent.innerHTML = '<p class="text-slate-500 text-center py-8">No raw reviews analyzed.</p>';
+                            }
+                            sentimentsContent.classList.remove('hidden');
+
+                            // Update badge
+                            statusBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800";
+                            statusBadge.innerText = "Analysis Complete";
+                            
+                            // Render Charts
+                            renderCharts(payload);
+                        } else if (data.type === 'error') {
+                            throw new Error(data.message);
+                        }
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            recSkeleton.classList.add('hidden');
+            recContent.innerText = "An error occurred during analysis.";
+            recContent.classList.remove('hidden');
+            statusBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-rose-100 text-rose-800";
+            statusBadge.innerText = "Error";
+        });
+    });
+});
+</script>
 {% endblock %}
