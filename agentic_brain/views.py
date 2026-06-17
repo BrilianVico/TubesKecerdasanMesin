@@ -8,15 +8,40 @@ from django.db.models import Avg
 
 class DashboardView(View):
     def get(self, request):
-        # Fetch all products and annotate with average rating
-        product_list = Product.objects.annotate(avg_rating=Avg('reviews__rating')).order_by('clothing_id')
+        department_query = request.GET.get('department')
+        class_query = request.GET.get('class')
         
-        # Paginate (20 per page)
-        paginator = Paginator(product_list, 20)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+        # Fetch distinct options for the dropdowns
+        departments = Product.objects.values_list('department_name', flat=True).distinct().order_by('department_name')
+        classes = Product.objects.values_list('class_name', flat=True).distinct().order_by('class_name')
         
-        return render(request, 'dashboard.html', {'page_obj': page_obj})
+        product_list = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
+        
+        is_filtered = False
+        if department_query and department_query != 'all':
+            product_list = product_list.filter(department_name=department_query)
+            is_filtered = True
+        
+        if class_query and class_query != 'all':
+            product_list = product_list.filter(class_name=class_query)
+            is_filtered = True
+            
+        if is_filtered:
+            # Limit results so we don't overwhelm the DOM
+            products = product_list.order_by('clothing_id')[:24]
+        else:
+            # Show top featured items by default
+            products = product_list.order_by('-avg_rating')[:8]
+            
+        context = {
+            'products': products,
+            'departments': [d for d in departments if d],
+            'classes': [c for c in classes if c],
+            'selected_department': department_query or 'all',
+            'selected_class': class_query or 'all',
+            'is_filtered': is_filtered
+        }
+        return render(request, 'dashboard.html', context)
 
 from django.http import JsonResponse, StreamingHttpResponse
 import json
@@ -28,9 +53,16 @@ class AnalyzeProductView(View):
         
         # Check if this is an AJAX/Fetch request for the actual analysis
         if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == 'true':
+            competitor_id_str = request.GET.get('competitor_id')
             
             def generate_stream():
                 initial_state = {"product_id": product.clothing_id}
+                if competitor_id_str:
+                    try:
+                        initial_state["competitor_id"] = int(competitor_id_str)
+                    except ValueError:
+                        pass
+                        
                 merged_state = dict(initial_state)
 
                 
@@ -89,7 +121,10 @@ class AnalyzeProductView(View):
             return StreamingHttpResponse(generate_stream(), content_type='text/event-stream')
             
         # Initial page load: render the empty shell waiting for user interaction
+        from django.db.models import Avg
+        competitors = Product.objects.filter(class_name=product.class_name).exclude(clothing_id=product.clothing_id).annotate(avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:20]
         context = {
             'product': product,
+            'competitors': competitors,
         }
         return render(request, 'analysis_result.html', context)

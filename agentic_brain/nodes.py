@@ -56,10 +56,14 @@ def compare_products(state: ProductAnalysisState) -> ProductAnalysisState:
     from django.db.models import Avg
     
     product_id = state.get("product_id")
+    competitor_id = state.get("competitor_id")
     try:
         main_product = Product.objects.get(clothing_id=product_id)
-        # Find a competitor in the same class
-        competitor = Product.objects.filter(class_name=main_product.class_name).exclude(clothing_id=product_id).first()
+        if competitor_id:
+            competitor = Product.objects.get(clothing_id=competitor_id)
+        else:
+            # Fallback: Find the highest rated competitor in the same class
+            competitor = Product.objects.filter(class_name=main_product.class_name).exclude(clothing_id=product_id).annotate(avg_rating=Avg('reviews__rating')).order_by('-avg_rating').first()
     except Product.DoesNotExist:
         competitor = None
         

@@ -6,18 +6,69 @@
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
     <header class="mb-8">
         <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">AI Insights Dashboard</h2>
-        <p class="text-slate-500 mt-2">Select a product below to unleash the Agentic Brain. It will synthesize raw reviews using Machine Learning and LLMs to provide actionable insights.</p>
+        <p class="text-slate-500 mt-2">Filter products by category to unleash the Agentic Brain and synthesize insights.</p>
     </header>
 
+    <!-- Filter Form -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-8">
+        <form method="GET" action="{% url 'agentic_brain:dashboard' %}" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1 w-full">
+                <label for="department" class="block text-sm font-medium text-slate-700 mb-1">Department</label>
+                <select name="department" id="department" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg border bg-slate-50">
+                    <option value="all">All Departments</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept }}" {% if selected_department == dept %}selected{% endif %}>{{ dept }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="flex-1 w-full">
+                <label for="class" class="block text-sm font-medium text-slate-700 mb-1">Class</label>
+                <select name="class" id="class" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg border bg-slate-50">
+                    <option value="all">All Classes</option>
+                    {% for cls in classes %}
+                        <option value="{{ cls }}" {% if selected_class == cls %}selected{% endif %}>{{ cls }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="w-full md:w-auto mt-4 md:mt-0">
+                <button type="submit" class="w-full inline-flex justify-center items-center px-6 py-2 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-sm">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    Filter
+                </button>
+            </div>
+            
+            {% if is_filtered %}
+            <div class="w-full md:w-auto mt-2 md:mt-0">
+                <a href="{% url 'agentic_brain:dashboard' %}" class="w-full inline-flex justify-center items-center px-6 py-2 border border-slate-300 text-base font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition shadow-sm">
+                    Clear
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if not is_filtered %}
+    <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-4 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+        Featured High-Rated Products
+    </h3>
+    {% else %}
+    <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-4">
+        Search Results
+    </h3>
+    {% endif %}
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {% for product in page_obj %}
+        {% for product in products %}
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col group">
             <div class="h-32 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white/20 group-hover:text-white/40 transition duration-500">
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
             </div>
             <div class="p-5 flex-1 flex flex-col">
                 <div class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">{{ product.department_name }} / {{ product.class_name }}</div>
-                <h3 class="text-lg font-bold text-slate-800 mb-1 truncate">{{ product.mock_name }}</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-1 truncate" title="{{ product.mock_name }}">{{ product.mock_name }}</h3>
                 <div class="flex items-center text-sm text-amber-500 mb-2 font-medium">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                     {{ product.avg_rating|default:"No ratings"|floatformat:1 }}
@@ -30,34 +81,13 @@
         </div>
         {% empty %}
         <div class="col-span-full text-center py-12">
-            <p class="text-slate-500">No products found in the database.</p>
+            <p class="text-slate-500 mb-4">No products match your filter criteria.</p>
+            <a href="{% url 'agentic_brain:dashboard' %}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Go back
+            </a>
         </div>
         {% endfor %}
     </div>
-
-    <!-- Pagination -->
-    {% if page_obj.has_other_pages %}
-    <div class="flex justify-center mt-12">
-        <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50">
-                <span class="sr-only">Previous</span>
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </a>
-            {% endif %}
-            
-            <span class="relative inline-flex items-center px-4 py-2 border border-slate-300 bg-blue-50 text-sm font-medium text-blue-600">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-            
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50">
-                <span class="sr-only">Next</span>
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </a>
-            {% endif %}
-        </nav>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

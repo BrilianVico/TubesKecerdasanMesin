@@ -21,6 +21,17 @@
         </div>
     </div>
 
+    <!-- Competitor Selection -->
+    <div class="max-w-xl mx-auto mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="competitor-container">
+        <label for="competitor-select" class="block text-sm font-bold text-slate-700 mb-2">Select Competitor for Market Comparison:</label>
+        <select id="competitor-select" class="block w-full pl-3 pr-10 py-3 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg border bg-slate-50">
+            <option value="">Let AI Decide (Highest Rated Competitor)</option>
+            {% for comp in competitors %}
+            <option value="{{ comp.clothing_id }}">{{ comp.mock_name }} (★ {{ comp.avg_rating|default:"N/A"|floatformat:1 }} | ${{ comp.mock_price }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
     <!-- Analyze Button -->
     <div class="text-center" id="action-container">
         <button id="analyze-btn" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
@@ -248,16 +259,21 @@ document.addEventListener('DOMContentLoaded', function() {
         analyzeBtn.classList.add('opacity-75', 'cursor-not-allowed');
         btnText.innerText = "Agentic Brain is thinking...";
         
+        const compSelect = document.getElementById('competitor-select');
+        compSelect.disabled = true;
+        
         // Change badge
         statusBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 animate-pulse";
         statusBadge.innerText = "Analyzing...";
         
         // Show results container with skeletons active
-        // actionContainer.classList.add('hidden');
         resultsContainer.classList.remove('hidden');
 
         // 2. Fetch API using Streaming Reader
-        fetch("{% url 'agentic_brain:analyze_product' product.clothing_id %}?ajax=true", {
+        const competitorId = compSelect.value;
+        const fetchUrl = "{% url 'agentic_brain:analyze_product' product.clothing_id %}?ajax=true" + (competitorId ? `&competitor_id=${competitorId}` : "");
+
+        fetch(fetchUrl, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
