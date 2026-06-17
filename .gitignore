@@ -1,0 +1,36 @@
+# Environments
+.env
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# ML Artifacts (Large Files)
+*.pkl
+*.model
+*.h5
+*.joblib
+ml_engine/artifacts/
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
